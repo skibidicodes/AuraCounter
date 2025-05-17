@@ -4,170 +4,315 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Aura Counter</title>
-  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0 }
     body {
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background: linear-gradient(120deg, #14162e, #0d111f);
-      font-family: sans-serif;
+      background: #000;
+      font-family: 'Rajdhani', sans-serif;
       color: #fff;
       padding: 20px;
     }
     h1 {
-      flex: none;
-      font-family: 'Permanent Marker', cursive;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
       font-size: 4rem;
       text-align: center;
-      margin-bottom: 16px;
-      color: #ff6ec4;
-      text-shadow: 0 0 3px #7873f5;
-      animation: glow-text 3s infinite alternate;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.1) 100%);
+      background-size: 200% auto;
+      color: #000;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
     }
-    @keyframes glow-text {
-      0%   { text-shadow: 0 0 2px #ff6ec4, 0 0 3px #7873f5; }
-      100% { text-shadow: 0 0 4px #ff6ec4, 0 0 6px #7873f5; }
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
     }
     .gallery {
       flex: 1;
       display: grid;
-      grid-template-columns: repeat(4,1fr);
-      grid-template-rows: repeat(2,1fr);
-      gap: 12px;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 20px;
       padding: 10px;
       width: calc(100% - 40px);
-      height: calc(100vh - 140px);
+      max-width: 1400px;
       margin: 0 auto;
     }
     .polaroid {
       position: relative;
       border-radius: 10px;
       overflow: hidden;
-      background: #1c203a;
-      padding: 6px;
+      background: #111;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      animation: glow-frame 3s infinite alternate;
-    }
-    @keyframes glow-frame {
-      0%   { box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
-      50%  { box-shadow: 0 8px 20px rgba(128,0,128,0.5), 0 0 8px rgba(128,0,128,0.4); }
-      100% { box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      transition: all 0.3s ease;
+      aspect-ratio: 1/1;
     }
     .polaroid:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.7);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.2);
+    }
+    .polaroid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      pointer-events: none;
     }
     .polaroid img {
-      width: 100%;
-      height: 100%;
+      width: calc(100% - 10px);
+      height: calc(100% - 60px);
       object-fit: cover;
       border-radius: 6px;
-      flex-shrink: 0;
+      filter: grayscale(30%);
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+    .polaroid:hover img {
+      filter: grayscale(0%);
+      transform: scale(1.03);
+    }
+    .polaroid:hover img {
+      filter: grayscale(0%);
+    }
+    .name-display {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+    }
+    .polaroid:hover .name-display {
+      opacity: 1;
     }
     .status {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.5);
-      padding: 4px 6px;
+      top: 16px;
+      right: 16px;
+      background: rgba(0,0,0,0.7);
+      padding: 4px 8px;
       border-radius: 4px;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      z-index: 2;
       display: none;
     }
     .caption {
       position: absolute;
-      bottom: 8px;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 16px;
+      left: 0;
+      right: 0;
       display: flex;
-      gap: 6px;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 12px;
+      z-index: 3;
     }
     .like-btn {
-      background: rgba(46,50,79,0.8);
-      border: none;
+      background: rgba(20,20,20,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
-      font-size: 0.85rem;
-      padding: 4px 8px;
-      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 20px;
       cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       display: flex;
       align-items: center;
-      transition: background 0.2s;
     }
-    .like-btn:hover { background: rgba(46,50,79,1); }
-    .like-btn .count { margin-left: 4px; font-weight: bold; }
-    .like-btn.animate { animation: pop 0.3s ease; }
-    @keyframes pop {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.3); }
-      100% { transform: scale(1); }
+    .like-btn:hover {
+      background: rgba(40,40,40,0.9);
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
-    @media (max-width:1024px) {
-      .gallery {
-        grid-template-columns: repeat(2,1fr);
-        grid-template-rows: repeat(4,1fr);
-        height: calc(100vh - 160px);
+    .like-btn.animate {
+      animation: glow 0.5s ease;
+    }
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 0 rgba(255,255,255,0.5);
+      }
+      50% {
+        box-shadow: 0 0 15px rgba(255,255,255,0.8);
+      }
+      100% {
+        box-shadow: 0 0 0 rgba(255,255,255,0.5);
       }
     }
-    @media (max-width:600px) {
+    .like-btn .count {
+      margin-left: 6px;
+      font-weight: 700;
+    }
+    @media (max-width: 1024px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      h1 {
+        font-size: 3rem;
+      }
+    }
+    @media (max-width: 600px) {
       .gallery {
         grid-template-columns: 1fr;
-        grid-template-rows: none;
-        height: auto;
+        grid-gap: 15px;
       }
-      h1 { font-size: 3rem; margin-bottom:12px; }
+      h1 {
+        font-size: 2.2rem;
+        letter-spacing: 4px;
+        margin-bottom: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Aura Counter</h1>
   <div class="gallery">
-    <div class="polaroid"><div class="status" id="status-1"></div><img src="Tokai.jpg" alt="Tokai"><div class="caption"><button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="status" id="status-2"></div><img src="ShonababuAdib.jpg" alt="ShonababuAdib"><div class="caption"><button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="status" id="status-3"></div><img src="6145406981880530470.jpg" alt="ModaFarhan"><div class="caption"><button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="status" id="status-4"></div><img src="Pandu.jpg" alt="Pandu"><div class="caption"><button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="status" id="status-5"></div><img src="masu.jpg" alt="Masu"><div class="caption"><button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="status" id="status-6"></div><img src="Pasa.jpg" alt="Pasa"><div class="caption"><button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="status" id="status-7"></div><img src="Nahian.jpg" alt="ChestCaveNahian"><div class="caption"><button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="status" id="status-8"></div><img src="Murgi.jpg" alt="Murgi"><div class="caption"><button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="8">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid">
+      <div class="status" id="status-1"></div>
+      <img src="Tokai.jpg" alt="Tokai">
+      <div class="name-display">TOKAI</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button>
+      </div>
+    </div>
+    <div class="polaroid">
+      <div class="status" id="status-2"></div>
+      <img src="ShonababuAdib.jpg" alt="ShonababuAdib">
+      <div class="name-display">SHONABABU</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button>
+      </div>
+    </div>
+    <div class="polaroid">
+      <div class="status" id="status-3"></div>
+      <img src="6145406981880530470.jpg" alt="ModaFarhan">
+      <div class="name-display">MODAFARHAN</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button>
+      </div>
+    </div>
+    <div class="polaroid">
+      <div class="status" id="status-4"></div>
+      <img src="Pandu.jpg" alt="Pandu">
+      <div class="name-display">PANDU</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button>
+      </div>
+    </div>
+    <div class="polaroid">
+      <div class="status" id="status-5"></div>
+      <img src="masu.jpg" alt="Masu">
+      <div class="name-display">MASU</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button>
+      </div>
+    </div>
+    <div class="polaroid">
+      <div class="status" id="status-6"></div>
+      <img src="Pasa.jpg" alt="Pasa">
+      <div class="name-display">PASA</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button>
+      </div>
+    </div>
+    <div class="polaroid">
+      <div class="status" id="status-7"></div>
+      <img src="Nahian.jpg" alt="ChestCaveNahian">
+      <div class="name-display">NAHIAN</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button>
+      </div>
+    </div>
+    <div class="polaroid">
+      <div class="status" id="status-8"></div>
+      <img src="Murgi.jpg" alt="Murgi">
+      <div class="name-display">MURGI</div>
+      <div class="caption">
+        <button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="8">Laura <span class="count">0</span></button>
+      </div>
+    </div>
   </div>
+
   <script>
     function updateStatus(id, aura, laura) {
       const el = document.getElementById('status-' + id);
       let diff = aura - laura;
       let txt;
+      
       if (aura === laura) {
         txt = 'Eipareo na, Oi pareo na';
       } else if (diff > 0) {
         txt = diff >= 5 ? 'Aura rampage!' : 'Aura advantage';
       } else {
-        txt = (-diff) >= 5 ? 'Aura debt!' : 'Aura debt';
+        txt = (-diff) >= 5 ? 'Aura debt!' : 'Aura deficit';
       }
+      
       el.textContent = txt;
       el.style.display = 'block';
     }
+    
     document.querySelectorAll('.aura-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.id;
         const c = btn.querySelector('.count');
         c.textContent = +c.textContent + 1;
         btn.classList.add('animate');
-        setTimeout(() => btn.classList.remove('animate'), 300);
+        setTimeout(() => btn.classList.remove('animate'), 500);
         const laura = +document.querySelector(`.laura-btn[data-id="${id}"] .count`).textContent;
         updateStatus(id, +c.textContent, laura);
       });
     });
+    
     document.querySelectorAll('.laura-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.id;
         const c = btn.querySelector('.count');
         c.textContent = +c.textContent + 1;
         btn.classList.add('animate');
-        setTimeout(() => btn.classList.remove('animate'), 300);
+        setTimeout(() => btn.classList.remove('animate'), 500);
         const aura = +document.querySelector(`.aura-btn[data-id="${id}"] .count`).textContent;
         updateStatus(id, aura, +c.textContent);
       });
