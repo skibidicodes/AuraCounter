@@ -8,22 +8,23 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0 }
     body {
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       background: #000;
       font-family: 'Rajdhani', sans-serif;
       color: #fff;
-      padding: 20px;
+      padding: 10px;
+      overflow: hidden;
     }
     h1 {
       font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
-      font-size: 4rem;
+      font-size: 3rem;
       text-align: center;
       letter-spacing: 8px;
       text-transform: uppercase;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
       background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.1) 100%);
       background-size: 200% auto;
       color: #000;
@@ -41,18 +42,19 @@
       flex: 1;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-gap: 20px;
-      padding: 10px;
-      width: calc(100% - 40px);
+      grid-gap: 15px;
+      padding: 0 10px;
+      width: calc(100% - 20px);
       max-width: 1400px;
       margin: 0 auto;
+      height: calc(100vh - 75px);
     }
     .polaroid {
       position: relative;
       border-radius: 10px;
       overflow: hidden;
       background: #111;
-      padding: 12px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -60,6 +62,7 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.8);
       transition: all 0.3s ease;
       aspect-ratio: 1/1;
+      max-height: 100%;
     }
     .polaroid:hover {
       transform: translateY(-8px);
@@ -78,7 +81,7 @@
     }
     .polaroid img {
       width: calc(100% - 10px);
-      height: calc(100% - 60px);
+      height: calc(100% - 50px);
       object-fit: cover;
       border-radius: 6px;
       filter: grayscale(30%);
@@ -100,9 +103,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 300;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5);
       opacity: 0;
@@ -119,8 +122,8 @@
     }
     .status {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 12px;
+      right: 12px;
       background: rgba(0,0,0,0.7);
       padding: 4px 8px;
       border-radius: 4px;
@@ -131,13 +134,13 @@
     }
     .caption {
       position: absolute;
-      bottom: 16px;
+      bottom: 12px;
       left: 0;
       right: 0;
       display: flex;
       justify-content: center;
       gap: 10px;
-      padding: 0 12px;
+      padding: 0 8px;
       z-index: 3;
     }
     .like-btn {
@@ -145,9 +148,9 @@
       border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
       font-family: 'Rajdhani', sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -183,18 +186,25 @@
         grid-template-columns: repeat(2, 1fr);
       }
       h1 {
-        font-size: 3rem;
+        font-size: 2.5rem;
       }
     }
     @media (max-width: 600px) {
       .gallery {
-        grid-template-columns: 1fr;
-        grid-gap: 15px;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
       }
       h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
         letter-spacing: 4px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+      }
+      .polaroid img {
+        height: calc(100% - 40px);
+      }
+      .like-btn {
+        font-size: 0.7rem;
+        padding: 4px 8px;
       }
     }
   </style>
@@ -259,7 +269,7 @@
     <div class="polaroid">
       <div class="status" id="status-7"></div>
       <img src="Nahian.jpg" alt="ChestCaveNahian">
-      <div class="name-display">NAHIAN</div>
+      <div class="name-display">CHESTCAVE</div>
       <div class="caption">
         <button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button>
         <button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button>
@@ -283,11 +293,11 @@
       let txt;
       
       if (aura === laura) {
-        txt = 'Eipareo na, Oi pareo na';
+        txt = 'No Aura';
       } else if (diff > 0) {
         txt = diff >= 5 ? 'Aura rampage!' : 'Aura advantage';
       } else {
-        txt = (-diff) >= 5 ? 'Aura debt!' : 'Aura deficit';
+        txt = (-diff) >= 5 ? 'Aura debt!' : 'Aura debt';
       }
       
       el.textContent = txt;
