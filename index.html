@@ -68,16 +68,6 @@
       border-radius: 6px;
       flex-shrink: 0;
     }
-    .label {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: none;
-      color: #fff;
-      text-shadow: 0 0 2px rgba(0,0,0,0.8);
-      font-size: 0.9rem;
-      pointer-events: none;
-    }
     .status {
       position: absolute;
       top: 8px;
@@ -136,15 +126,14 @@
 <body>
   <h1>Aura Counter</h1>
   <div class="gallery">
-    <!-- Replace image sources with your actual file names -->
-    <div class="polaroid"><div class="label">Tokai</div><div class="status" id="status-1"></div><img src="Tokai.jpg" alt="Tokai"><div class="caption"><button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="label">ShonababuAdib</div><div class="status" id="status-2"></div><img src="ShonababuAdib.jpg" alt="ShonababuAdib"><div class="caption"><button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="label">ModaFarhan</div><div class="status" id="status-3"></div><img src="6145406981880530470.jpg" alt="ModaFarhan"><div class="caption"><button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="label">Pandu</div><div class="status" id="status-4"></div><img src="Pandu.jpg" alt="Pandu"><div class="caption"><button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="label">Masu</div><div class="status" id="status-5"></div><img src="masu.jpg" alt="Masu"><div class="caption"><button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="label">Pasa</div><div class="status" id="status-6"></div><img src="Pasa.jpg" alt="Pasa"><div class="caption"><button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="label">ChestCaveNahian</div><div class="status" id="status-7"></div><img src="Nahian.jpg" alt="ChestCaveNahian"><div class="caption"><button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button></div></div>
-    <div class="polaroid"><div class="label">Murgi</div><div class="status" id="status-8"></div><img src="Murgi.jpg" alt="Murgi"><div class="caption"><button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="8">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-1"></div><img src="Tokai.jpg" alt="Tokai"><div class="caption"><button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-2"></div><img src="ShonababuAdib.jpg" alt="ShonababuAdib"><div class="caption"><button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-3"></div><img src="6145406981880530470.jpg" alt="ModaFarhan"><div class="caption"><button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-4"></div><img src="Pandu.jpg" alt="Pandu"><div class="caption"><button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-5"></div><img src="masu.jpg" alt="Masu"><div class="caption"><button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-6"></div><img src="Pasa.jpg" alt="Pasa"><div class="caption"><button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-7"></div><img src="Nahian.jpg" alt="ChestCaveNahian"><div class="caption"><button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button></div></div>
+    <div class="polaroid"><div class="status" id="status-8"></div><img src="Murgi.jpg" alt="Murgi"><div class="caption"><button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button><button class="like-btn laura-btn" data-id="8">Laura <span class="count">0</span></button></div></div>
   </div>
   <script>
     function updateStatus(id, aura, laura) {
