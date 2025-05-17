@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Aura Counter</title>
-  <!-- Hand-drawn comic font for title -->
   <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0 }
@@ -17,7 +16,6 @@
       color: #fff;
       padding: 20px;
     }
-    /* Comic-style title with reduced glow */
     h1 {
       flex: none;
       font-family: 'Permanent Marker', cursive;
@@ -72,15 +70,15 @@
       border-radius: 6px;
       flex-shrink: 0;
     }
+    /* plain white label, no background */
     .label {
       position: absolute;
       top: 8px;
       left: 8px;
-      background: rgba(0,0,0,0.6);
+      background: none;
       color: #fff;
-      padding: 2px 6px;
-      font-size: 0.8rem;
-      border-radius: 4px;
+      text-shadow: 0 0 2px rgba(0,0,0,0.8);
+      font-size: 0.9rem;
       pointer-events: none;
     }
     .status {
@@ -150,6 +148,8 @@
         <button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button>
       </div>
     </div>
+    <!-- repeat for each of the eight frames... -->
+    <!-- ShonababuAdib -->
     <div class="polaroid">
       <div class="label">ShonababuAdib</div>
       <div class="status" id="status-2"></div>
@@ -159,6 +159,7 @@
         <button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button>
       </div>
     </div>
+    <!-- ModaFarhan -->
     <div class="polaroid">
       <div class="label">ModaFarhan</div>
       <div class="status" id="status-3"></div>
@@ -168,6 +169,7 @@
         <button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button>
       </div>
     </div>
+    <!-- Pandu -->
     <div class="polaroid">
       <div class="label">Pandu</div>
       <div class="status" id="status-4"></div>
@@ -177,15 +179,17 @@
         <button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button>
       </div>
     </div>
+    <!-- Masu -->
     <div class="polaroid">
       <div class="label">Masu</div>
       <div class="status" id="status-5"></div>
       <img src="masu.jpg" alt="Masu">
       <div class="caption">
         <button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button>
+        <button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button>  
       </div>
     </div>
+    <!-- Pasa -->
     <div class="polaroid">
       <div class="label">Pasa</div>
       <div class="status" id="status-6"></div>
@@ -195,6 +199,7 @@
         <button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button>
       </div>
     </div>
+    <!-- ChestCaveNahian -->
     <div class="polaroid">
       <div class="label">ChestCaveNahian</div>
       <div class="status" id="status-7"></div>
@@ -204,6 +209,7 @@
         <button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button>
       </div>
     </div>
+    <!-- Murgi -->
     <div class="polaroid">
       <div class="label">Murgi</div>
       <div class="status" id="status-8"></div>
@@ -254,3 +260,5 @@
   </script>
 </body>
 </html>
+"""
+open('/mnt/data/index.html', 'w').write(html)
