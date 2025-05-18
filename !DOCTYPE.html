@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aura Counter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    /* Resets and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+      padding: 10px;
+    }
+
+    h1 {
+      /* Gradient text effect */
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 3rem;
+      text-align: center;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.1) 100%);
+      background-size: 200% auto;
+      color: #000;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
+    }
+
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    /* Mode selector buttons */
+    .mode-selector {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .mode-btn {
+      background: rgba(20, 20, 20, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .mode-btn:hover {
+      background: rgba(40, 40, 40, 0.9);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .mode-btn.active {
+      background: rgba(60, 60, 60, 0.9);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Gallery container and slider */
+    .gallery-container {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      /* Removed justify-content: center; */
+    }
+
+    .gallery-slider {
+  flex: 0 0 200%;
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%;
+}
+
+    .gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 15px;  /* horizontal spacing */
+  row-gap: 40px;     /* increase vertical spacing */
+      padding: 0 10px;
+      width: 100%;
+      padding-bottom: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 100%;
+      /* Allow gallery to use available height */
+      align-content: start;
+      /* Align grid items to the start if space allows */
+      overflow-y: auto;
+      /* Add vertical scroll if content overflows */
+    }
+
+    /* Slider controls (dots) */
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .slider-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .slider-dot.active {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+   /* Polaroid card styles */
+.polaroid {
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #111;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+  /* shrink frame to 90% of its grid cell */
+  width: 90%;
+  /* center it horizontally */
+  justify-self: center;
+  aspect-ratio: 1/1;
+}
+
+/* Lift & bring this card to the front */
+.polaroid:hover {
+  z-index: 10;              /* <-- add this */
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Also keep it on top while a button inside has focus (tap) */
+.polaroid:focus-within {
+  z-index: 10;
+}
+
+.polaroid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.polaroid img {
+  /* subtract more so the image is smaller in its frame */
+  width: calc(100% - 30px);
+  height: calc(100% - 90px);
+  object-fit: cover;
+  border-radius: 6px;
+  filter: grayscale(30%);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.polaroid:hover img {
+  filter: grayscale(0%);
+  transform: scale(1.03);
+}
+
+
+    .name-display {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+    }
+
+    .polaroid:hover .name-display {
+      opacity: 1;
+    }
+
+    .status {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      z-index: 2;
+      display: none;
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 8px;
+      z-index: 3;
+    }
+
+    .like-btn {
+      background: rgba(20, 20, 20, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+    }
+
+    .like-btn:hover {
+      background: rgba(40, 40, 40, 0.9);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .like-btn.animate {
+      animation: glow 0.5s ease;
+    }
+
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0.5);
+      }
+
+      50% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      }
+
+      100% {
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .like-btn .count {
+      margin-left: 6px;
+      font-weight: 700;
+    }
+
+    /* Spam Mode Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #111;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      max-width: 600px;
+      width: 90%;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .modal-title {
+      font-family: 'VT323', monospace;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .modal-content {
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .modal-highest-score {
+      font-family: 'VT323', monospace;
+      font-size: 1.8rem;
+      text-align: center;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      color: #00FFFF;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 15px rgba(0, 255, 255, 0.6);
+      line-height: 1.5;
+    }
+
+    .modal-timer {
+      font-family: 'VT323', monospace;
+      font-size: 3rem;
+      text-align: center;
+      margin: 20px 0;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    }
+
+    .modal-btn {
+      background: rgba(40, 40, 40, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      padding: 10px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+      margin: 10px auto;
+    }
+
+    .modal-btn:hover {
+      background: rgba(60, 60, 60, 0.9);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: rgba(255, 255, 255, 1);
+      transform: scale(1.1);
+    }
+
+    .spam-mode-active-indicator {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 0, 0, 0.2);
+      border: 1px solid rgba(255, 0, 0, 0.4);
+      color: #fff;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      z-index: 100;
+      display: none;
+      text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+    }
+
+    .spam-game-timer-display {
+      position: fixed;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.8rem;
+      font-family: 'VT323', monospace;
+      color: #00FFFF;
+      z-index: 99;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.9), 0 0 20px rgba(0, 255, 255, 0.7);
+      display: none;
+    }
+
+    /* Typewriter effect */
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 0 auto;
+      animation: typing 3.5s steps(40, end);
+    }
+
+    @keyframes typing {
+      from {
+        width: 0
+      }
+
+      to {
+        width: 100%
+      }
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 1024px) {
+      .gallery {
+        /* Keep 2 columns on screens up to 1024px */
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .spam-game-timer-display {
+        font-size: 2.2rem;
+        top: 45px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        letter-spacing: 4px;
+        margin-bottom: 10px;
+      }
+
+      .polaroid img {
+        height: calc(100% - 0px);
+      }
+
+      .like-btn {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+      }
+
+      .mode-btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+      }
+
+      .spam-game-timer-display {
+        font-size: 2rem;
+        top: 45px;
+      }
+
+      .modal-title {
+        font-size: 2rem;
+      }
+
+      .modal-content {
+        font-size: 1.2rem;
+      }
+
+      .modal-highest-score {
+        font-size: 1.5rem;
+      }
+
+      .modal-timer {
+        font-size: 2.5rem;
+      }
+ @media (max-width: 1024px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Aura Counter</h1>
+
+  <div class="mode-selector">
+    <button class="mode-btn active" id="counter-mode">Counter</button>
+    <button class="mode-btn" id="spam-mode-btn">Spam Mode</button>
+  </div>
+
+  <div class="spam-mode-active-indicator" id="spam-indicator">SPAM MODE ACTIVE</div>
+  <div class="spam-game-timer-display" id="spam-game-timer"></div>
+
+
+  <div class="gallery-container">
+    <div class="gallery-slider">
+      <div class="gallery" id="gallery-1">
+        <div class="polaroid">
+          <div class="status" id="status-1"></div>
+          <img src="Tokai.jpg" alt="Tokai" onerror="this.src='https://placehold.co/200x200/333/fff?text=Tokai+Error'">
+          <div class="name-display">TOKAI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-2"></div>
+          <img src="ShonababuAdib.jpg" alt="ShonababuAdib" onerror="this.src='https://placehold.co/200x200/333/fff?text=Shonababu+Error'">
+          <div class="name-display">SHONABABU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-3"></div>
+          <img src="ModaFarhan.jpg" alt="ModaFarhan" onerror="this.src='https://placehold.co/200x200/333/fff?text=ModaFarhan+Error'">
+          <div class="name-display">MODAFARHAN</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-4"></div>
+          <img src="Pandu.jpg" alt="Pandu" onerror="this.src='https://placehold.co/200x200/333/fff?text=Pandu+Error'">
+          <div class="name-display">PANDU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-5"></div>
+          <img src="Masu.jpg" alt="Masu" onerror="this.src='https://placehold.co/200x200/333/fff?text=Masu+Error'">
+          <div class="name-display">MASU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-6"></div>
+          <img src="Pasa.jpg" alt="Pasa" onerror="this.src='https://placehold.co/200x200/333/fff?text=Pasa+Error'">
+          <div class="name-display">PASA</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-7"></div>
+          <img src="ChestCaveNahian.jpg" alt="ChestCaveNahian" onerror="this.src='https://placehold.co/200x200/333/fff?text=ChestCave+Error'">
+          <div class="name-display">CHESTCAVE</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-8"></div>
+          <img src="Murgi.jpg" alt="Murgi" onerror="this.src='https://placehold.co/200x200/333/fff?text=Murgi+Error'">
+          <div class="name-display">MURGI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="8">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery" id="gallery-2">
+        <div class="polaroid">
+          <div class="status" id="status-9"></div>
+          <img src="Kana.jpg" alt="Kana" onerror="this.src='https://placehold.co/200x200/333/fff?text=Kana+Error'">
+          <div class="name-display">KANA</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="9">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="9">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-10"></div>
+          <img src="Naif.jpg" alt="Naif" onerror="this.src='https://placehold.co/200x200/333/fff?text=Naif+Error'">
+          <div class="name-display">NAIF</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="10">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="10">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-11"></div>
+          <img src="AyanJi.jpg" alt="AyanJi" onerror="this.src='https://placehold.co/200x200/333/fff?text=AyanJi+Error'">
+          <div class="name-display">AYANJI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="11">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="11">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-12"></div>
+          <img src="RifuSkibidi.jpg" alt="RifuSkibidi" onerror="this.src='https://placehold.co/200x200/333/fff?text=RifuSkibidi+Error'">
+          <div class="name-display">RIFUSKIBIDI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="12">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="12">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-13"></div>
+          <img src="ChumtPaglu.jpg" alt="ChumtPaglu" onerror="this.src='https://placehold.co/200x200/333/fff?text=ChumtPaglu+Error'">
+          <div class="name-display">CHUMTPAGLU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="13">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="13">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-14"></div>
+          <img src="Haden.jpg" alt="Haden" onerror="this.src='https://placehold.co/200x200/333/fff?text=Haden+Error'">
+          <div class="name-display">HADEN</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="14">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="14">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-15"></div>
+          <img src="Baygedbai.jpg" alt="Baygedbai" onerror="this.src='https://placehold.co/200x200/333/fff?text=Baygedbai+Error'">
+          <div class="name-display">BAYGEDBAI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="15">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="15">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-16"></div>
+          <img src="Fauji.jpg" alt="Fauji" onerror="this.src='https://placehold.co/200x200/333/fff?text=Fauji+Error'">
+          <div class="name-display">FAUJI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="16">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="16">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slider-controls">
+    <div class="slider-dot active" data-index="0"></div>
+    <div class="slider-dot" data-index="1"></div>
+  </div>
+
+  <div class="modal-overlay" id="spam-modal">
+    <div class="modal">
+      <button class="modal-close" id="close-modal-btn">✖</button>
+      <h2 class="modal-title typewriter">BATTLE MODE ENGAGED!</h2>
+      <div class="modal-content typewriter">
+        It's a 20-sec AURA BATTLE! Tap like there's no tomorrow!
+      </div>
+      <div class="modal-highest-score" id="modal-highest-score"></div>
+      <div class="modal-timer" id="modal-timer-display">Waiting to start</div>
+      <div class="modal-buttons">
+        <button class="modal-btn" id="start-spam-btn">START BATTLE</button>
+        <button class="modal-btn" id="give-up-btn">GIVE UP</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // DOM Elements
+    const counterModeBtn = document.getElementById('counter-mode');
+    const spamModeBtn = document.getElementById('spam-mode-btn');
+    const spamIndicator = document.getElementById('spam-indicator');
+    const spamGameTimerDisplay = document.getElementById('spam-game-timer');
+    const gallerySlider = document.querySelector('.gallery-slider');
+    const sliderDots = document.querySelectorAll('.slider-dot');
+    const spamModal = document.getElementById('spam-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const modalHighestScoreDisplay = document.getElementById('modal-highest-score');
+    const modalTimerDisplay = document.getElementById('modal-timer-display');
+    const startSpamBtn = document.getElementById('start-spam-btn');
+    const giveUpBtn = document.getElementById('give-up-btn');
+    const auraBtns = document.querySelectorAll('.aura-btn');
+    const lauraBtns = document.querySelectorAll('.laura-btn');
+    const statusDisplays = document.querySelectorAll('.status');
+
+
+    // Local Storage handling
+    const STORAGE_KEY = 'aura-counter-data-v2';
+    let userData = {
+      counterMode: {},
+      spamModeTaps: {},
+      activeMode: 'counter',
+      activePage: 0,
+      spamGameActive: false,
+      spamGameIntervalId: null,
+    };
+
+    // Load data from local storage
+    function loadData() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          userData.counterMode = parsed.counterMode || {};
+          userData.activeMode = parsed.activeMode || 'counter';
+          // Ensure activePage is within valid range (0 or 1)
+          userData.activePage = (parsed.activePage === 0 || parsed.activePage === 1) ? parsed.activePage : 0;
+        } catch (e) {
+          console.error("Error parsing stored data", e);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+    }
+
+    // Save data to local storage
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        counterMode: userData.counterMode,
+        activePage: userData.activePage,
+        activeMode: userData.activeMode
+      }));
+    }
+
+    // Function to update the displayed Aura counts
+    function updateAuraButtonCounts(dataObject) {
+      auraBtns.forEach(btn => {
+        const id = btn.dataset.id;
+        const countEl = btn.querySelector('.count');
+        countEl.textContent = (dataObject[id] ? dataObject[id].aura || 0 : 0).toString();
+      });
+    }
+
+    // Function to update the displayed Laura counts
+    function updateLauraButtonCounts() {
+      lauraBtns.forEach(btn => {
+        const id = btn.dataset.id;
+        const countEl = btn.querySelector('.count');
+        countEl.textContent = (userData.counterMode[id] ? userData.counterMode[id].laura || 0 : 0).toString();
+      });
+    }
+
+    // Update UI from data
+    function updateUI() {
+      if (userData.activeMode === 'spam' && userData.spamGameActive) {
+        updateAuraButtonCounts(userData.spamModeTaps);
+      } else {
+        updateAuraButtonCounts(userData.counterMode);
+      }
+      updateLauraButtonCounts();
+
+      statusDisplays.forEach(statusEl => {
+        const id = statusEl.id.split('-')[1];
+        const aura = userData.counterMode[id]?.aura || 0;
+        const laura = userData.counterMode[id]?.laura || 0;
+        updateStatusDisplay(id, aura, laura);
+      });
+
+      counterModeBtn.classList.toggle('active', userData.activeMode === 'counter');
+      spamModeBtn.classList.toggle('active', userData.activeMode === 'spam');
+
+      // Set the transform for smooth sliding
+      gallerySlider.style.transform = `translateX(-${userData.activePage * 50}%)`;
+
+      sliderDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === userData.activePage);
+      });
+
+      spamIndicator.style.display = userData.spamGameActive ? 'block' : 'none';
+      spamGameTimerDisplay.style.display = userData.spamGameActive ? 'block' : 'none';
+
+      if (!userData.spamGameActive && spamModal.classList.contains('active') && modalTimerDisplay.textContent.includes("Waiting")) {
+        modalHighestScoreDisplay.innerHTML = '';
+      }
+    }
+
+    function updateStatusDisplay(id, aura, laura) {
+      const el = document.getElementById('status-' + id);
+      if (!el) return;
+      let diff = aura - laura;
+      let txt;
+      if (aura === 0 && laura === 0) {
+        el.style.display = 'none';
+        return;
+      }
+      if (aura === laura) {
+        txt = 'No Aura';
+      } else if (diff > 0) {
+        txt = diff >= 5 ? 'Aura rampage!' : 'Aura advantage';
+      } else {
+        txt = (-diff) >= 5 ? 'Aura debt!' : 'Aura debt';
+      }
+      el.textContent = txt;
+      el.style.display = 'block';
+    }
+
+    // Initialize the application
+    function init() {
+      loadData();
+ userData.activePage = 0;
+      userData.spamModeTaps = {};
+      // userData.activeMode is loaded from local storage
+
+      // Explicitly set the initial transform and active dot based on loaded data
+      gallerySlider.style.transform = `translateX(-${userData.activePage * 50}%)`;
+      sliderDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === userData.activePage);
+      });
+
+
+      auraBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          handleAuraTap(btn.dataset.id);
+          btn.classList.add('animate');
+          setTimeout(() => btn.classList.remove('animate'), 500);
+        });
+      });
+
+      lauraBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          handleLauraTap(btn.dataset.id);
+          btn.classList.add('animate');
+          setTimeout(() => btn.classList.remove('animate'), 500);
+        });
+      });
+
+      counterModeBtn.addEventListener('click', () => {
+        if (userData.spamGameActive) return;
+        userData.activeMode = 'counter';
+        cleanUpSpamGame();
+        saveData();
+        updateUI();
+      });
+
+      spamModeBtn.addEventListener('click', () => {
+        if (userData.spamGameActive) return;
+        userData.activeMode = 'spam';
+        userData.spamModeTaps = {};
+        modalHighestScoreDisplay.innerHTML = '';
+        modalTimerDisplay.textContent = 'Waiting to start';
+        spamModal.classList.add('active');
+        updateUI();
+      });
+
+      sliderDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          if (userData.spamGameActive) return;
+          const index = parseInt(dot.dataset.index);
+          userData.activePage = index;
+          saveData();
+          updateUI();
+        });
+      });
+
+      closeModalBtn.addEventListener('click', closeSpamModalAndReset);
+      startSpamBtn.addEventListener('click', () => {
+        if (!userData.spamGameActive && !userData.spamGameIntervalId) {
+          spamModal.classList.remove('active');
+          initiateSpamGame();
+        }
+      });
+      giveUpBtn.addEventListener('click', closeSpamModalAndReset);
+
+      // Initial UI update for counts and status (transform and dots are set above/in CSS)
+      updateUI();
+    }
+
+    function handleAuraTap(id) {
+      if (userData.activeMode === 'counter') {
+        if (!userData.counterMode[id]) userData.counterMode[id] = {
+          aura: 0,
+          laura: 0
+        };
+        userData.counterMode[id].aura++;
+        saveData();
+      } else if (userData.activeMode === 'spam' && userData.spamGameActive) {
+        if (!userData.spamModeTaps[id]) userData.spamModeTaps[id] = {
+          aura: 0
+        };
+        userData.spamModeTaps[id].aura++;
+      }
+      updateUI();
+    }
+
+    function handleLauraTap(id) {
+      if (!userData.counterMode[id]) userData.counterMode[id] = {
+        aura: 0,
+        laura: 0
+      };
+      userData.counterMode[id].laura++;
+      saveData();
+      updateUI();
+    }
+
+    function cleanUpSpamGame() {
+      if (userData.spamGameIntervalId) {
+        clearInterval(userData.spamGameIntervalId);
+        userData.spamGameIntervalId = null;
+      }
+      userData.spamGameActive = false;
+      spamGameTimerDisplay.textContent = '';
+      spamGameTimerDisplay.style.display = 'none';
+      spamIndicator.style.display = 'none';
+      // When spam game ends, update counts from counterMode
+      if (userData.activeMode !== 'spam') { // Only if not immediately re-entering spam mode
+        updateAuraButtonCounts(userData.counterMode);
+      }
+    }
+
+    function closeSpamModalAndReset() {
+      spamModal.classList.remove('active');
+      cleanUpSpamGame();
+      // When closing modal, ensure UI reflects the current mode (likely counter)
+      if (userData.activeMode === 'spam') { // If spam mode was active, switch back to counter
+        userData.activeMode = 'counter';
+        saveData(); // Save the mode change
+      }
+      updateUI();
+    }
+
+    function initiateSpamGame() {
+      if (userData.spamGameIntervalId) return;
+
+      userData.spamGameActive = true;
+      userData.spamModeTaps = {}; // Reset taps for the new game
+      updateUI();
+
+      let timeLeft = 20;
+
+      spamGameTimerDisplay.textContent = formatTime(timeLeft);
+      modalTimerDisplay.textContent = timeLeft + 's';
+
+      userData.spamGameIntervalId = setInterval(() => {
+        timeLeft--;
+        spamGameTimerDisplay.textContent = formatTime(timeLeft);
+        modalTimerDisplay.textContent = timeLeft + 's';
+
+        if (timeLeft < 0) {
+          clearInterval(userData.spamGameIntervalId);
+          userData.spamGameIntervalId = null;
+          concludeSpamGame();
+        }
+      }, 1000);
+    }
+
+    function concludeSpamGame() {
+      userData.spamGameActive = false;
+
+      let highestScore = -1;
+      let winnerProfileName = "No one";
+      let actualScoreForWinner = 0;
+      let foundWinner = false;
+
+      for (const id in userData.spamModeTaps) {
+        if (userData.spamModeTaps.hasOwnProperty(id)) {
+          const currentScore = userData.spamModeTaps[id].aura || 0;
+          if (currentScore > highestScore) {
+            highestScore = currentScore;
+            actualScoreForWinner = currentScore;
+            // Find the name display for the winner
+            const polaroidElement = document.querySelector(`.aura-btn[data-id='${id}']`)?.closest('.polaroid');
+            winnerProfileName = polaroidElement?.querySelector('.name-display')?.textContent || `Profile ${id}`;
+            foundWinner = true;
+          } else if (currentScore === highestScore && highestScore > 0) {
+            // Handle ties - indicate multiple winners or just show one
+            // For simplicity, we'll just show the first one found with the highest score
+          }
+        }
+      }
+
+      if (foundWinner && highestScore > 0) {
+        modalHighestScoreDisplay.innerHTML = `Highest Score: <br> ${winnerProfileName} (${actualScoreForWinner} taps)`;
+      } else {
+        modalHighestScoreDisplay.innerHTML = "Highest Score: <br> No taps recorded!";
+      }
+
+      modalTimerDisplay.textContent = 'Battle Ended!';
+      spamModal.classList.add('active');
+      updateUI();
+    }
+
+    function formatTime(seconds) {
+      return seconds.toString();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+
+</html>
