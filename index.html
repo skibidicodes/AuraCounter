@@ -91,30 +91,32 @@
       flex: 1;
       overflow: hidden;
       display: flex;
-      justify-content: center;
-      /* Center the entire gallery */
+      /* Removed justify-content: center; */
     }
 
     .gallery-slider {
-      display: flex;
-      transition: transform 0.5s ease;
-      height: 100%;
-      width: 200%; /* Ensure the slider is wide enough for two pages */
-    }
+  flex: 0 0 200%;
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%;
+}
 
     .gallery {
-      flex: 0 0 50%;
-      /* Each gallery takes up 50% of the slider */
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 15px;  /* horizontal spacing */
+  row-gap: 40px;     /* increase vertical spacing */
       padding: 0 10px;
       width: 100%;
+      padding-bottom: 30px;
       max-width: 1400px;
       margin: 0 auto;
       height: 100%;
-      justify-content: center;
-      /* Center the gallery grid items */
+      /* Allow gallery to use available height */
+      align-content: start;
+      /* Align grid items to the start if space allows */
+      overflow-y: auto;
+      /* Add vertical scroll if content overflows */
     }
 
     /* Slider controls (dots) */
@@ -139,57 +141,69 @@
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
     }
 
-    /* Polaroid card styles */
-    .polaroid {
-      position: relative;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #111;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
-      transition: all 0.3s ease;
-      aspect-ratio: 1/1;
-      max-height: 100%;
-    }
+   /* Polaroid card styles */
+.polaroid {
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #111;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
+  /* shrink frame to 90% of its grid cell */
+  width: 90%;
+  /* center it horizontally */
+  justify-self: center;
+  aspect-ratio: 1/1;
+}
 
-    .polaroid:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 255, 255, 0.2);
-    }
+/* Lift & bring this card to the front */
+.polaroid:hover {
+  z-index: 10;              /* <-- add this */
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 255, 255, 0.2);
+}
 
-    .polaroid::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      pointer-events: none;
-    }
+/* Also keep it on top while a button inside has focus (tap) */
+.polaroid:focus-within {
+  z-index: 10;
+}
 
-    .polaroid img {
-      width: calc(100% - 10px);
-      height: calc(100% - 50px);
-      object-fit: cover;
-      border-radius: 6px;
-      filter: grayscale(30%);
-      transition: all 0.3s ease;
-      z-index: 1;
-    }
+.polaroid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  pointer-events: none;
+}
 
-    .polaroid:hover img {
-      filter: grayscale(0%);
-      transform: scale(1.03);
-    }
+.polaroid img {
+  /* subtract more so the image is smaller in its frame */
+  width: calc(100% - 30px);
+  height: calc(100% - 90px);
+  object-fit: cover;
+  border-radius: 6px;
+  filter: grayscale(30%);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.polaroid:hover img {
+  filter: grayscale(0%);
+  transform: scale(1.03);
+}
+
 
     .name-display {
-      /* Name overlay */
       position: absolute;
       top: 0;
       left: 0;
@@ -217,7 +231,6 @@
     }
 
     .status {
-      /* Status indicator */
       position: absolute;
       top: 12px;
       right: 12px;
@@ -231,7 +244,6 @@
     }
 
     .caption {
-      /* Button captions */
       position: absolute;
       bottom: 12px;
       left: 0;
@@ -342,8 +354,19 @@
       font-family: 'VT323', monospace;
       font-size: 1.5rem;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       line-height: 1.4;
+    }
+
+    .modal-highest-score {
+      font-family: 'VT323', monospace;
+      font-size: 1.8rem;
+      text-align: center;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      color: #00FFFF;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 15px rgba(0, 255, 255, 0.6);
+      line-height: 1.5;
     }
 
     .modal-timer {
@@ -366,7 +389,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       display: block;
-      margin: 0 auto;
+      margin: 10px auto;
     }
 
     .modal-btn:hover {
@@ -391,7 +414,7 @@
       transform: scale(1.1);
     }
 
-    .spam-mode-active {
+    .spam-mode-active-indicator {
       position: fixed;
       top: 15px;
       left: 50%;
@@ -404,6 +427,20 @@
       font-family: 'VT323', monospace;
       font-size: 1.2rem;
       z-index: 100;
+      display: none;
+      text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+    }
+
+    .spam-game-timer-display {
+      position: fixed;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.8rem;
+      font-family: 'VT323', monospace;
+      color: #00FFFF;
+      z-index: 99;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.9), 0 0 20px rgba(0, 255, 255, 0.7);
       display: none;
     }
 
@@ -428,11 +465,17 @@
     /* Media Queries for Responsiveness */
     @media (max-width: 1024px) {
       .gallery {
+        /* Keep 2 columns on screens up to 1024px */
         grid-template-columns: repeat(2, 1fr);
       }
 
       h1 {
         font-size: 2.5rem;
+      }
+
+      .spam-game-timer-display {
+        font-size: 2.2rem;
+        top: 45px;
       }
     }
 
@@ -449,7 +492,7 @@
       }
 
       .polaroid img {
-        height: calc(100% - 40px);
+        height: calc(100% - 0px);
       }
 
       .like-btn {
@@ -461,17 +504,31 @@
         font-size: 0.8rem;
         padding: 6px 12px;
       }
-    }
 
-    .timer-display {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 1.5rem;
-      font-family: 'VT323', monospace;
-      color: #fff;
-      z-index: 100;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      .spam-game-timer-display {
+        font-size: 2rem;
+        top: 45px;
+      }
+
+      .modal-title {
+        font-size: 2rem;
+      }
+
+      .modal-content {
+        font-size: 1.2rem;
+      }
+
+      .modal-highest-score {
+        font-size: 1.5rem;
+      }
+
+      .modal-timer {
+        font-size: 2.5rem;
+      }
+ @media (max-width: 1024px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
@@ -481,17 +538,19 @@
 
   <div class="mode-selector">
     <button class="mode-btn active" id="counter-mode">Counter</button>
-    <button class="mode-btn" id="spam-mode">Spam Mode</button>
+    <button class="mode-btn" id="spam-mode-btn">Spam Mode</button>
   </div>
 
-  <div class="spam-mode-active" id="spam-indicator">SPAM MODE ACTIVE</div>
+  <div class="spam-mode-active-indicator" id="spam-indicator">SPAM MODE ACTIVE</div>
+  <div class="spam-game-timer-display" id="spam-game-timer"></div>
+
 
   <div class="gallery-container">
-    <div class="gallery-slider" style="width: 200%;">
-      <div class="gallery" id="gallery-1" style="width: 50%;">
+    <div class="gallery-slider">
+      <div class="gallery" id="gallery-1">
         <div class="polaroid">
           <div class="status" id="status-1"></div>
-          <img src="Tokai.jpg" alt="Tokai">
+          <img src="Tokai.jpg" alt="Tokai" onerror="this.src='https://placehold.co/200x200/333/fff?text=Tokai+Error'">
           <div class="name-display">TOKAI</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button>
@@ -500,7 +559,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-2"></div>
-          <img src="ShonababuAdib.jpg" alt="ShonababuAdib">
+          <img src="ShonababuAdib.jpg" alt="ShonababuAdib" onerror="this.src='https://placehold.co/200x200/333/fff?text=Shonababu+Error'">
           <div class="name-display">SHONABABU</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button>
@@ -509,7 +568,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-3"></div>
-          <img src="ModaFarhan.jpg" alt="ModaFarhan">
+          <img src="ModaFarhan.jpg" alt="ModaFarhan" onerror="this.src='https://placehold.co/200x200/333/fff?text=ModaFarhan+Error'">
           <div class="name-display">MODAFARHAN</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button>
@@ -518,7 +577,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-4"></div>
-          <img src="Pandu.jpg" alt="Pandu">
+          <img src="Pandu.jpg" alt="Pandu" onerror="this.src='https://placehold.co/200x200/333/fff?text=Pandu+Error'">
           <div class="name-display">PANDU</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button>
@@ -527,7 +586,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-5"></div>
-          <img src="Masu.jpg" alt="Masu">
+          <img src="Masu.jpg" alt="Masu" onerror="this.src='https://placehold.co/200x200/333/fff?text=Masu+Error'">
           <div class="name-display">MASU</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button>
@@ -536,7 +595,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-6"></div>
-          <img src="Pasa.jpg" alt="Pasa">
+          <img src="Pasa.jpg" alt="Pasa" onerror="this.src='https://placehold.co/200x200/333/fff?text=Pasa+Error'">
           <div class="name-display">PASA</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button>
@@ -545,7 +604,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-7"></div>
-          <img src="ChestCaveNahian.jpg" alt="ChestCaveNahian">
+          <img src="ChestCaveNahian.jpg" alt="ChestCaveNahian" onerror="this.src='https://placehold.co/200x200/333/fff?text=ChestCave+Error'">
           <div class="name-display">CHESTCAVE</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button>
@@ -554,7 +613,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-8"></div>
-          <img src="Murgi.jpg" alt="Murgi">
+          <img src="Murgi.jpg" alt="Murgi" onerror="this.src='https://placehold.co/200x200/333/fff?text=Murgi+Error'">
           <div class="name-display">MURGI</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button>
@@ -563,10 +622,10 @@
         </div>
       </div>
 
-      <div class="gallery" id="gallery-2" style="width: 50%;">
+      <div class="gallery" id="gallery-2">
         <div class="polaroid">
           <div class="status" id="status-9"></div>
-          <img src="Kana.jpg" alt="Kana">
+          <img src="Kana.jpg" alt="Kana" onerror="this.src='https://placehold.co/200x200/333/fff?text=Kana+Error'">
           <div class="name-display">KANA</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="9">Aura <span class="count">0</span></button>
@@ -575,7 +634,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-10"></div>
-          <img src="Naif.jpg" alt="Naif">
+          <img src="Naif.jpg" alt="Naif" onerror="this.src='https://placehold.co/200x200/333/fff?text=Naif+Error'">
           <div class="name-display">NAIF</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="10">Aura <span class="count">0</span></button>
@@ -584,7 +643,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-11"></div>
-          <img src="AyanJi.jpg" alt="AyanJi">
+          <img src="AyanJi.jpg" alt="AyanJi" onerror="this.src='https://placehold.co/200x200/333/fff?text=AyanJi+Error'">
           <div class="name-display">AYANJI</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="11">Aura <span class="count">0</span></button>
@@ -593,7 +652,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-12"></div>
-          <img src="RifuSkibidi.jpg" alt="RifuSkibidi">
+          <img src="RifuSkibidi.jpg" alt="RifuSkibidi" onerror="this.src='https://placehold.co/200x200/333/fff?text=RifuSkibidi+Error'">
           <div class="name-display">RIFUSKIBIDI</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="12">Aura <span class="count">0</span></button>
@@ -602,7 +661,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-13"></div>
-          <img src="ChumtPaglu.jpg" alt="ChumtPaglu">
+          <img src="ChumtPaglu.jpg" alt="ChumtPaglu" onerror="this.src='https://placehold.co/200x200/333/fff?text=ChumtPaglu+Error'">
           <div class="name-display">CHUMTPAGLU</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="13">Aura <span class="count">0</span></button>
@@ -611,7 +670,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-14"></div>
-          <img src="Haden.jpg" alt="Haden">
+          <img src="Haden.jpg" alt="Haden" onerror="this.src='https://placehold.co/200x200/333/fff?text=Haden+Error'">
           <div class="name-display">HADEN</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="14">Aura <span class="count">0</span></button>
@@ -620,7 +679,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-15"></div>
-          <img src="Baygedbai.jpg" alt="Baygedbai">
+          <img src="Baygedbai.jpg" alt="Baygedbai" onerror="this.src='https://placehold.co/200x200/333/fff?text=Baygedbai+Error'">
           <div class="name-display">BAYGEDBAI</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="15">Aura <span class="count">0</span></button>
@@ -629,7 +688,7 @@
         </div>
         <div class="polaroid">
           <div class="status" id="status-16"></div>
-          <img src="Fauji.jpg" alt="Fauji">
+          <img src="Fauji.jpg" alt="Fauji" onerror="this.src='https://placehold.co/200x200/333/fff?text=Fauji+Error'">
           <div class="name-display">FAUJI</div>
           <div class="caption">
             <button class="like-btn aura-btn" data-id="16">Aura <span class="count">0</span></button>
@@ -647,35 +706,49 @@
 
   <div class="modal-overlay" id="spam-modal">
     <div class="modal">
-      <button class="modal-close" id="close-modal">✖</button>
+      <button class="modal-close" id="close-modal-btn">✖</button>
       <h2 class="modal-title typewriter">BATTLE MODE ENGAGED!</h2>
       <div class="modal-content typewriter">
-        It's a 20-sec AURA BATTLE! Tap like there's no tomorrow! The one with the highest aura ratio will be crowned the
-          ULTIMATE AURA MASTER!
+        It's a 20-sec AURA BATTLE! Tap like there's no tomorrow!
       </div>
-      <div class="modal-participants" id="modal-participants">
-        Participants: <span id="participant-count">0</span>
-      </div>
-      <div class="modal-timer" id="modal-timer">Waiting to start</div>
+      <div class="modal-highest-score" id="modal-highest-score"></div>
+      <div class="modal-timer" id="modal-timer-display">Waiting to start</div>
       <div class="modal-buttons">
-        <button class="modal-btn" id="start-spam">START BATTLE</button>
-        <button class="modal-btn" id="give-up">GIVE UP</button>
+        <button class="modal-btn" id="start-spam-btn">START BATTLE</button>
+        <button class="modal-btn" id="give-up-btn">GIVE UP</button>
       </div>
     </div>
   </div>
-  <div class="timer-display" id="spam-timer"></div>
+
 
   <script>
+    // DOM Elements
+    const counterModeBtn = document.getElementById('counter-mode');
+    const spamModeBtn = document.getElementById('spam-mode-btn');
+    const spamIndicator = document.getElementById('spam-indicator');
+    const spamGameTimerDisplay = document.getElementById('spam-game-timer');
+    const gallerySlider = document.querySelector('.gallery-slider');
+    const sliderDots = document.querySelectorAll('.slider-dot');
+    const spamModal = document.getElementById('spam-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const modalHighestScoreDisplay = document.getElementById('modal-highest-score');
+    const modalTimerDisplay = document.getElementById('modal-timer-display');
+    const startSpamBtn = document.getElementById('start-spam-btn');
+    const giveUpBtn = document.getElementById('give-up-btn');
+    const auraBtns = document.querySelectorAll('.aura-btn');
+    const lauraBtns = document.querySelectorAll('.laura-btn');
+    const statusDisplays = document.querySelectorAll('.status');
+
+
     // Local Storage handling
-    const STORAGE_KEY = 'aura-counter-data';
+    const STORAGE_KEY = 'aura-counter-data-v2';
     let userData = {
-      counterMode: {}, // Persistent data
-      spamMode: {}, // Temporary data
+      counterMode: {},
+      spamModeTaps: {},
       activeMode: 'counter',
       activePage: 0,
-      spamModeActive: false,
-      spamParticipants: 0,
-      spamIntervalId: null, // To store the interval ID
+      spamGameActive: false,
+      spamGameIntervalId: null,
     };
 
     // Load data from local storage
@@ -686,7 +759,8 @@
           const parsed = JSON.parse(stored);
           userData.counterMode = parsed.counterMode || {};
           userData.activeMode = parsed.activeMode || 'counter';
-          userData.activePage = parsed.activePage || 0;
+          // Ensure activePage is within valid range (0 or 1)
+          userData.activePage = (parsed.activePage === 0 || parsed.activePage === 1) ? parsed.activePage : 0;
         } catch (e) {
           console.error("Error parsing stored data", e);
           localStorage.removeItem(STORAGE_KEY);
@@ -698,79 +772,72 @@
     function saveData() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         counterMode: userData.counterMode,
-        activeMode: userData.activeMode,
-        activePage: userData.activePage
+        activePage: userData.activePage,
+        activeMode: userData.activeMode
       }));
     }
 
-    // Function to update the displayed counts
-    function updateCounts(modeData, selector) {
-      document.querySelectorAll(selector).forEach(btn => {
+    // Function to update the displayed Aura counts
+    function updateAuraButtonCounts(dataObject) {
+      auraBtns.forEach(btn => {
         const id = btn.dataset.id;
         const countEl = btn.querySelector('.count');
-        countEl.textContent = modeData[id] ? modeData[id].aura || 0 : 0;
+        countEl.textContent = (dataObject[id] ? dataObject[id].aura || 0 : 0).toString();
       });
     }
 
-    // Function to update the Laura counts
-    function updateLauraCounts(modeData, selector) {
-      document.querySelectorAll(selector).forEach(btn => {
+    // Function to update the displayed Laura counts
+    function updateLauraButtonCounts() {
+      lauraBtns.forEach(btn => {
         const id = btn.dataset.id;
         const countEl = btn.querySelector('.count');
-        countEl.textContent = modeData[id] ? modeData[id].laura || 0 : 0;
+        countEl.textContent = (userData.counterMode[id] ? userData.counterMode[id].laura || 0 : 0).toString();
       });
     }
 
     // Update UI from data
     function updateUI() {
-      const mode = userData.activeMode;
-      const data = userData[mode + 'Mode'];
+      if (userData.activeMode === 'spam' && userData.spamGameActive) {
+        updateAuraButtonCounts(userData.spamModeTaps);
+      } else {
+        updateAuraButtonCounts(userData.counterMode);
+      }
+      updateLauraButtonCounts();
 
-      updateCounts(data, '.aura-btn');
-      updateLauraCounts(data, '.laura-btn');
-
-      // Update status indicators
-      document.querySelectorAll('.status').forEach(status => {
-        const id = status.id.split('-')[1];
-        const aura = data[id]?.aura || 0;
-        const laura = data[id]?.laura || 0;
-        updateStatus(id, aura, laura);
+      statusDisplays.forEach(statusEl => {
+        const id = statusEl.id.split('-')[1];
+        const aura = userData.counterMode[id]?.aura || 0;
+        const laura = userData.counterMode[id]?.laura || 0;
+        updateStatusDisplay(id, aura, laura);
       });
 
-      // Set active mode button
-      document.querySelectorAll('.mode-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.id === mode + '-mode');
-      });
+      counterModeBtn.classList.toggle('active', userData.activeMode === 'counter');
+      spamModeBtn.classList.toggle('active', userData.activeMode === 'spam');
 
-      // Set active slider page
-      const slider = document.querySelector('.gallery-slider');
-      slider.style.transform = `translateX(-${userData.activePage * 50}%)`;
+      // Set the transform for smooth sliding
+      gallerySlider.style.transform = `translateX(-${userData.activePage * 50}%)`;
 
-      // Update slider dots
-      document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+      sliderDots.forEach((dot, index) => {
         dot.classList.toggle('active', index === userData.activePage);
       });
 
-      // Show/hide spam mode indicator
-      document.getElementById('spam-indicator').style.display =
-        userData.spamModeActive ? 'block' : 'none';
+      spamIndicator.style.display = userData.spamGameActive ? 'block' : 'none';
+      spamGameTimerDisplay.style.display = userData.spamGameActive ? 'block' : 'none';
 
-      //update participant count
-      document.getElementById('participant-count').textContent = userData.spamParticipants;
+      if (!userData.spamGameActive && spamModal.classList.contains('active') && modalTimerDisplay.textContent.includes("Waiting")) {
+        modalHighestScoreDisplay.innerHTML = '';
+      }
     }
 
-    function updateStatus(id, aura, laura) {
+    function updateStatusDisplay(id, aura, laura) {
       const el = document.getElementById('status-' + id);
       if (!el) return;
-
       let diff = aura - laura;
       let txt;
-
       if (aura === 0 && laura === 0) {
         el.style.display = 'none';
         return;
       }
-
       if (aura === laura) {
         txt = 'No Aura';
       } else if (diff > 0) {
@@ -778,7 +845,6 @@
       } else {
         txt = (-diff) >= 5 ? 'Aura debt!' : 'Aura debt';
       }
-
       el.textContent = txt;
       el.style.display = 'block';
     }
@@ -786,48 +852,54 @@
     // Initialize the application
     function init() {
       loadData();
+ userData.activePage = 0;
+      userData.spamModeTaps = {};
+      // userData.activeMode is loaded from local storage
 
-      // Initialize data structures if empty
-      if (!userData.counterMode) userData.counterMode = {};
-      if (!userData.spamMode) userData.spamMode = {};
+      // Explicitly set the initial transform and active dot based on loaded data
+      gallerySlider.style.transform = `translateX(-${userData.activePage * 50}%)`;
+      sliderDots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === userData.activePage);
+      });
 
-      // Set default mode to counter
-      userData.activeMode = 'counter';
 
-      // Set up event listeners for aura/laura buttons
-      document.querySelectorAll('.aura-btn').forEach(btn => {
+      auraBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-          handleAuraClick(btn.dataset.id);
+          handleAuraTap(btn.dataset.id);
+          btn.classList.add('animate');
+          setTimeout(() => btn.classList.remove('animate'), 500);
         });
       });
 
-      document.querySelectorAll('.laura-btn').forEach(btn => {
+      lauraBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-          handleLauraClick(btn.dataset.id);
+          handleLauraTap(btn.dataset.id);
+          btn.classList.add('animate');
+          setTimeout(() => btn.classList.remove('animate'), 500);
         });
       });
 
-      // Mode buttons
-      document.getElementById('counter-mode').addEventListener('click', () => {
+      counterModeBtn.addEventListener('click', () => {
+        if (userData.spamGameActive) return;
         userData.activeMode = 'counter';
+        cleanUpSpamGame();
         saveData();
         updateUI();
       });
 
-      document.getElementById('spam-mode').addEventListener('click', () => {
+      spamModeBtn.addEventListener('click', () => {
+        if (userData.spamGameActive) return;
         userData.activeMode = 'spam';
-        userData.spamMode = {}; // Reset spam mode data
-        userData.spamParticipants = 0;
-        userData.spamModeActive = false;
-        document.getElementById('spam-modal').classList.add('active');
-        document.getElementById('modal-timer').textContent = 'Waiting to start'; //reset timer text
-        saveData();
+        userData.spamModeTaps = {};
+        modalHighestScoreDisplay.innerHTML = '';
+        modalTimerDisplay.textContent = 'Waiting to start';
+        spamModal.classList.add('active');
         updateUI();
       });
 
-      // Slider dots
-      document.querySelectorAll('.slider-dot').forEach(dot => {
+      sliderDots.forEach(dot => {
         dot.addEventListener('click', () => {
+          if (userData.spamGameActive) return;
           const index = parseInt(dot.dataset.index);
           userData.activePage = index;
           saveData();
@@ -835,154 +907,137 @@
         });
       });
 
-      // Spam mode modal
-      document.getElementById('close-modal').addEventListener('click', () => {
-        document.getElementById('spam-modal').classList.remove('active');
-        clearInterval(userData.spamIntervalId); // Clear interval if modal is closed.
-        userData.spamIntervalId = null;
-        userData.spamModeActive = false; //reset
-        userData.spamParticipants = 0;
-        document.getElementById('spam-timer').textContent = '';
-        updateUI();
-      });
-
-      document.getElementById('start-spam').addEventListener('click', () => {
-        if (userData.spamParticipants >= 3) {
-          startSpamMode();
-          document.getElementById('spam-modal').classList.remove('active');
+      closeModalBtn.addEventListener('click', closeSpamModalAndReset);
+      startSpamBtn.addEventListener('click', () => {
+        if (!userData.spamGameActive && !userData.spamGameIntervalId) {
+          spamModal.classList.remove('active');
+          initiateSpamGame();
         }
       });
+      giveUpBtn.addEventListener('click', closeSpamModalAndReset);
 
-      document.getElementById('give-up').addEventListener('click', () => {
-        document.getElementById('spam-modal').classList.remove('active');
-        clearInterval(userData.spamIntervalId); // Clear interval on give up
-        userData.spamIntervalId = null;
-        userData.spamModeActive = false; //reset
-        userData.spamParticipants = 0;
-        document.getElementById('spam-timer').textContent = '';
-        updateUI();
-      });
-
-      // Initialize UI
+      // Initial UI update for counts and status (transform and dots are set above/in CSS)
       updateUI();
     }
 
-    function handleAuraClick(id) {
-      const mode = userData.activeMode + 'Mode';
-      if (!userData[mode][id]) userData[mode][id] = {
+    function handleAuraTap(id) {
+      if (userData.activeMode === 'counter') {
+        if (!userData.counterMode[id]) userData.counterMode[id] = {
+          aura: 0,
+          laura: 0
+        };
+        userData.counterMode[id].aura++;
+        saveData();
+      } else if (userData.activeMode === 'spam' && userData.spamGameActive) {
+        if (!userData.spamModeTaps[id]) userData.spamModeTaps[id] = {
+          aura: 0
+        };
+        userData.spamModeTaps[id].aura++;
+      }
+      updateUI();
+    }
+
+    function handleLauraTap(id) {
+      if (!userData.counterMode[id]) userData.counterMode[id] = {
         aura: 0,
         laura: 0
       };
-      userData[mode][id].aura++;
-
-      if (userData.activeMode === 'spam') {
-        userData.spamParticipants++;
-        checkSpamParticipants();
-      }
-
-      const btn = document.querySelector(`.aura-btn[data-id="${id}"]`);
-      btn.classList.add('animate');
-      setTimeout(() => btn.classList.remove('animate'), 500);
+      userData.counterMode[id].laura++;
       saveData();
       updateUI();
     }
 
-    function handleLauraClick(id) {
-      const mode = userData.activeMode + 'Mode';
-      if (!userData[mode][id]) userData[mode][id] = {
-        aura: 0,
-        laura: 0
-      };
-      userData[mode][id].laura++;
-
-      if (userData.activeMode === 'spam') {
-        userData.spamParticipants++;
-        checkSpamParticipants();
+    function cleanUpSpamGame() {
+      if (userData.spamGameIntervalId) {
+        clearInterval(userData.spamGameIntervalId);
+        userData.spamGameIntervalId = null;
       }
-      const btn = document.querySelector(`.laura-btn[data-id="${id}"]`);
-      btn.classList.add('animate');
-      setTimeout(() => btn.classList.remove('animate'), 500);
-      saveData();
+      userData.spamGameActive = false;
+      spamGameTimerDisplay.textContent = '';
+      spamGameTimerDisplay.style.display = 'none';
+      spamIndicator.style.display = 'none';
+      // When spam game ends, update counts from counterMode
+      if (userData.activeMode !== 'spam') { // Only if not immediately re-entering spam mode
+        updateAuraButtonCounts(userData.counterMode);
+      }
+    }
+
+    function closeSpamModalAndReset() {
+      spamModal.classList.remove('active');
+      cleanUpSpamGame();
+      // When closing modal, ensure UI reflects the current mode (likely counter)
+      if (userData.activeMode === 'spam') { // If spam mode was active, switch back to counter
+        userData.activeMode = 'counter';
+        saveData(); // Save the mode change
+      }
       updateUI();
     }
 
-    // Handle spam mode
-    function startSpamMode() {
-      if (userData.spamIntervalId) return; //prevent multiple intervals
+    function initiateSpamGame() {
+      if (userData.spamGameIntervalId) return;
 
-      userData.spamModeActive = true;
-      userData.spamMode = {}; // Reset spam data
+      userData.spamGameActive = true;
+      userData.spamModeTaps = {}; // Reset taps for the new game
       updateUI();
 
       let timeLeft = 20;
-      document.getElementById('spam-indicator').style.display = 'block';
-      document.getElementById('modal-timer').textContent = timeLeft + ' seconds';
 
-      const timerDisplay = document.getElementById('spam-timer');
-      timerDisplay.style.display = 'block';
-      timerDisplay.textContent = formatTime(timeLeft);
+      spamGameTimerDisplay.textContent = formatTime(timeLeft);
+      modalTimerDisplay.textContent = timeLeft + 's';
 
-
-      userData.spamIntervalId = setInterval(() => {
+      userData.spamGameIntervalId = setInterval(() => {
         timeLeft--;
+        spamGameTimerDisplay.textContent = formatTime(timeLeft);
+        modalTimerDisplay.textContent = timeLeft + 's';
 
-        if (timeLeft <= 0) {
-          clearInterval(userData.spamIntervalId);
-          userData.spamIntervalId = null; //clear
-          endSpamMode();
-        } else {
-          timerDisplay.textContent = formatTime(timeLeft);
-          document.getElementById('modal-timer').textContent = timeLeft + ' seconds';
+        if (timeLeft < 0) {
+          clearInterval(userData.spamGameIntervalId);
+          userData.spamGameIntervalId = null;
+          concludeSpamGame();
         }
       }, 1000);
     }
 
-    function checkSpamParticipants() {
-      // Check if we have at least 3 different participants
-      if (userData.spamParticipants >= 3 && !userData.spamModeActive) {
-        startSpamMode();
-      }
-      updateUI();
-    }
+    function concludeSpamGame() {
+      userData.spamGameActive = false;
 
-    function endSpamMode() {
-      userData.spamModeActive = false;
-      userData.spamParticipants = 0;
-      document.getElementById('spam-timer').textContent = '';
+      let highestScore = -1;
+      let winnerProfileName = "No one";
+      let actualScoreForWinner = 0;
+      let foundWinner = false;
 
-      // Find winner
-      let maxRatio = -1;
-      let winner = null;
-      let winningId = null;
-
-      for (const [id, data] of Object.entries(userData.spamMode)) {
-        const ratio = data.aura / (data.laura || 1); // Avoid division by zero
-        if (ratio > maxRatio) {
-          maxRatio = ratio;
-          winningId = id;
-          winner = `Player #${winningId}`;
+      for (const id in userData.spamModeTaps) {
+        if (userData.spamModeTaps.hasOwnProperty(id)) {
+          const currentScore = userData.spamModeTaps[id].aura || 0;
+          if (currentScore > highestScore) {
+            highestScore = currentScore;
+            actualScoreForWinner = currentScore;
+            // Find the name display for the winner
+            const polaroidElement = document.querySelector(`.aura-btn[data-id='${id}']`)?.closest('.polaroid');
+            winnerProfileName = polaroidElement?.querySelector('.name-display')?.textContent || `Profile ${id}`;
+            foundWinner = true;
+          } else if (currentScore === highestScore && highestScore > 0) {
+            // Handle ties - indicate multiple winners or just show one
+            // For simplicity, we'll just show the first one found with the highest score
+          }
         }
       }
 
-      let message = "BATTLE ENDED! ";
-      if (winner) {
-        message += `${winner} is the ULTIMATE AURA MASTER with a ratio of ${maxRatio.toFixed(2)}!`;
+      if (foundWinner && highestScore > 0) {
+        modalHighestScoreDisplay.innerHTML = `Highest Score: <br> ${winnerProfileName} (${actualScoreForWinner} taps)`;
       } else {
-        message += "No clear winner this time!";
+        modalHighestScoreDisplay.innerHTML = "Highest Score: <br> No taps recorded!";
       }
-      alert(message);
 
-      // Reset spam mode
-      userData.spamMode = {};
+      modalTimerDisplay.textContent = 'Battle Ended!';
+      spamModal.classList.add('active');
       updateUI();
     }
 
     function formatTime(seconds) {
-      // Simple timer formatting function
-      return seconds;
+      return seconds.toString();
     }
 
-    // Initialize the app when DOM is ready
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
