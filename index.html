@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Aura Counter</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=VT323&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0 }
+    /* Resets and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       height: 100vh;
       display: flex;
@@ -14,10 +21,12 @@
       background: #000;
       font-family: 'Rajdhani', sans-serif;
       color: #fff;
+      overflow-x: hidden;
       padding: 10px;
-      overflow: hidden;
     }
+
     h1 {
+      /* Gradient text effect */
       font-family: 'Rajdhani', sans-serif;
       font-weight: 700;
       font-size: 3rem;
@@ -25,7 +34,7 @@
       letter-spacing: 8px;
       text-transform: uppercase;
       margin-bottom: 10px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.1) 100%);
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.1) 100%);
       background-size: 200% auto;
       color: #000;
       background-clip: text;
@@ -33,22 +42,104 @@
       -webkit-text-fill-color: transparent;
       animation: shine 3s linear infinite;
     }
+
     @keyframes shine {
       to {
         background-position: 200% center;
       }
     }
-    .gallery {
+
+    /* Mode selector buttons */
+    .mode-selector {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .mode-btn {
+      background: rgba(20, 20, 20, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .mode-btn:hover {
+      background: rgba(40, 40, 40, 0.9);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .mode-btn.active {
+      background: rgba(60, 60, 60, 0.9);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Gallery container and slider */
+    .gallery-container {
+      position: relative;
+      width: 100%;
       flex: 1;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      /* Center the entire gallery */
+    }
+
+    .gallery-slider {
+      display: flex;
+      transition: transform 0.5s ease;
+      height: 100%;
+      width: 200%; /* Ensure the slider is wide enough for two pages */
+    }
+
+    .gallery {
+      flex: 0 0 50%;
+      /* Each gallery takes up 50% of the slider */
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 15px;
       padding: 0 10px;
-      width: calc(100% - 20px);
+      width: 100%;
       max-width: 1400px;
       margin: 0 auto;
-      height: calc(100vh - 75px);
+      height: 100%;
+      justify-content: center;
+      /* Center the gallery grid items */
     }
+
+    /* Slider controls (dots) */
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .slider-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .slider-dot.active {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Polaroid card styles */
     .polaroid {
       position: relative;
       border-radius: 10px;
@@ -59,15 +150,17 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
       transition: all 0.3s ease;
       aspect-ratio: 1/1;
       max-height: 100%;
     }
+
     .polaroid:hover {
       transform: translateY(-8px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.9), 0 0 15px rgba(255,255,255,0.2);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 255, 255, 0.2);
     }
+
     .polaroid::before {
       content: '';
       position: absolute;
@@ -75,10 +168,11 @@
       left: 0;
       right: 0;
       bottom: 0;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       pointer-events: none;
     }
+
     .polaroid img {
       width: calc(100% - 10px);
       height: calc(100% - 50px);
@@ -88,14 +182,14 @@
       transition: all 0.3s ease;
       z-index: 1;
     }
+
     .polaroid:hover img {
       filter: grayscale(0%);
       transform: scale(1.03);
     }
-    .polaroid:hover img {
-      filter: grayscale(0%);
-    }
+
     .name-display {
+      /* Name overlay */
       position: absolute;
       top: 0;
       left: 0;
@@ -107,7 +201,7 @@
       font-weight: 300;
       letter-spacing: 2px;
       text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
       opacity: 0;
       transition: opacity 0.3s ease;
       text-align: center;
@@ -117,14 +211,17 @@
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(2px);
     }
+
     .polaroid:hover .name-display {
       opacity: 1;
     }
+
     .status {
+      /* Status indicator */
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0, 0, 0, 0.7);
       padding: 4px 8px;
       border-radius: 4px;
       font-size: 0.8rem;
@@ -132,7 +229,9 @@
       z-index: 2;
       display: none;
     }
+
     .caption {
+      /* Button captions */
       position: absolute;
       bottom: 12px;
       left: 0;
@@ -143,9 +242,10 @@
       padding: 0 8px;
       z-index: 3;
     }
+
     .like-btn {
-      background: rgba(20,20,20,0.8);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(20, 20, 20, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       font-family: 'Rajdhani', sans-serif;
       font-size: 0.8rem;
@@ -159,139 +259,518 @@
       display: flex;
       align-items: center;
     }
+
     .like-btn:hover {
-      background: rgba(40,40,40,0.9);
-      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+      background: rgba(40, 40, 40, 0.9);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     }
+
     .like-btn.animate {
       animation: glow 0.5s ease;
     }
+
     @keyframes glow {
       0% {
-        box-shadow: 0 0 0 rgba(255,255,255,0.5);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0.5);
       }
+
       50% {
-        box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
       }
+
       100% {
-        box-shadow: 0 0 0 rgba(255,255,255,0.5);
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0.5);
       }
     }
+
     .like-btn .count {
       margin-left: 6px;
       font-weight: 700;
     }
+
+    /* Spam Mode Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #111;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      max-width: 600px;
+      width: 90%;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .modal-title {
+      font-family: 'VT323', monospace;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .modal-content {
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 30px;
+      line-height: 1.4;
+    }
+
+    .modal-timer {
+      font-family: 'VT323', monospace;
+      font-size: 3rem;
+      text-align: center;
+      margin: 20px 0;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    }
+
+    .modal-btn {
+      background: rgba(40, 40, 40, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      padding: 10px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .modal-btn:hover {
+      background: rgba(60, 60, 60, 0.9);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: rgba(255, 255, 255, 1);
+      transform: scale(1.1);
+    }
+
+    .spam-mode-active {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 0, 0, 0.2);
+      border: 1px solid rgba(255, 0, 0, 0.4);
+      color: #fff;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      z-index: 100;
+      display: none;
+    }
+
+    /* Typewriter effect */
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 0 auto;
+      animation: typing 3.5s steps(40, end);
+    }
+
+    @keyframes typing {
+      from {
+        width: 0
+      }
+
+      to {
+        width: 100%
+      }
+    }
+
+    /* Media Queries for Responsiveness */
     @media (max-width: 1024px) {
       .gallery {
         grid-template-columns: repeat(2, 1fr);
       }
+
       h1 {
         font-size: 2.5rem;
       }
     }
+
     @media (max-width: 600px) {
       .gallery {
         grid-template-columns: repeat(2, 1fr);
         grid-gap: 10px;
       }
+
       h1 {
         font-size: 2rem;
         letter-spacing: 4px;
         margin-bottom: 10px;
       }
+
       .polaroid img {
         height: calc(100% - 40px);
       }
+
       .like-btn {
         font-size: 0.7rem;
         padding: 4px 8px;
       }
+
+      .mode-btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+      }
+    }
+
+    .timer-display {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      font-family: 'VT323', monospace;
+      color: #fff;
+      z-index: 100;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
     }
   </style>
 </head>
+
 <body>
   <h1>Aura Counter</h1>
-  <div class="gallery">
-    <div class="polaroid">
-      <div class="status" id="status-1"></div>
-      <img src="Tokai.jpg" alt="Tokai">
-      <div class="name-display">TOKAI</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button>
+
+  <div class="mode-selector">
+    <button class="mode-btn active" id="counter-mode">Counter</button>
+    <button class="mode-btn" id="spam-mode">Spam Mode</button>
+  </div>
+
+  <div class="spam-mode-active" id="spam-indicator">SPAM MODE ACTIVE</div>
+
+  <div class="gallery-container">
+    <div class="gallery-slider" style="width: 200%;">
+      <div class="gallery" id="gallery-1" style="width: 50%;">
+        <div class="polaroid">
+          <div class="status" id="status-1"></div>
+          <img src="/api/placeholder/400/400" alt="Tokai">
+          <div class="name-display">TOKAI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="1">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="1">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-2"></div>
+          <img src="/api/placeholder/400/400" alt="ShonababuAdib">
+          <div class="name-display">SHONABABU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-3"></div>
+          <img src="/api/placeholder/400/400" alt="ModaFarhan">
+          <div class="name-display">MODAFARHAN</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-4"></div>
+          <img src="/api/placeholder/400/400" alt="Pandu">
+          <div class="name-display">PANDU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-5"></div>
+          <img src="/api/placeholder/400/400" alt="Masu">
+          <div class="name-display">MASU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-6"></div>
+          <img src="/api/placeholder/400/400" alt="Pasa">
+          <div class="name-display">PASA</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-7"></div>
+          <img src="/api/placeholder/400/400" alt="ChestCaveNahian">
+          <div class="name-display">CHESTCAVE</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-8"></div>
+          <img src="/api/placeholder/400/400" alt="Murgi">
+          <div class="name-display">MURGI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="8">Laura <span class="count">0</span></button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="polaroid">
-      <div class="status" id="status-2"></div>
-      <img src="ShonababuAdib.jpg" alt="ShonababuAdib">
-      <div class="name-display">SHONABABU</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="2">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="2">Laura <span class="count">0</span></button>
-      </div>
-    </div>
-    <div class="polaroid">
-      <div class="status" id="status-3"></div>
-      <img src="6145406981880530470.jpg" alt="ModaFarhan">
-      <div class="name-display">MODAFARHAN</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="3">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="3">Laura <span class="count">0</span></button>
-      </div>
-    </div>
-    <div class="polaroid">
-      <div class="status" id="status-4"></div>
-      <img src="Pandu.jpg" alt="Pandu">
-      <div class="name-display">PANDU</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="4">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="4">Laura <span class="count">0</span></button>
-      </div>
-    </div>
-    <div class="polaroid">
-      <div class="status" id="status-5"></div>
-      <img src="masu.jpg" alt="Masu">
-      <div class="name-display">MASU</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="5">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="5">Laura <span class="count">0</span></button>
-      </div>
-    </div>
-    <div class="polaroid">
-      <div class="status" id="status-6"></div>
-      <img src="Pasa.jpg" alt="Pasa">
-      <div class="name-display">PASA</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="6">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="6">Laura <span class="count">0</span></button>
-      </div>
-    </div>
-    <div class="polaroid">
-      <div class="status" id="status-7"></div>
-      <img src="Nahian.jpg" alt="ChestCaveNahian">
-      <div class="name-display">CHESTCAVE</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="7">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="7">Laura <span class="count">0</span></button>
-      </div>
-    </div>
-    <div class="polaroid">
-      <div class="status" id="status-8"></div>
-      <img src="Murgi.jpg" alt="Murgi">
-      <div class="name-display">MURGI</div>
-      <div class="caption">
-        <button class="like-btn aura-btn" data-id="8">Aura <span class="count">0</span></button>
-        <button class="like-btn laura-btn" data-id="8">Laura <span class="count">0</span></button>
+
+      <div class="gallery" id="gallery-2" style="width: 50%;">
+        <div class="polaroid">
+          <div class="status" id="status-9"></div>
+          <img src="/api/placeholder/400/400" alt="Kana">
+          <div class="name-display">KANA</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="9">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="9">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-10"></div>
+          <img src="/api/placeholder/400/400" alt="Naif">
+          <div class="name-display">NAIF</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="10">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="10">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-11"></div>
+          <img src="/api/placeholder/400/400" alt="AyanJi">
+          <div class="name-display">AYANJI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="11">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="11">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-12"></div>
+          <img src="/api/placeholder/400/400" alt="RifuSkibidi">
+          <div class="name-display">RIFUSKIBIDI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="12">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="12">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-13"></div>
+          <img src="/api/placeholder/400/400" alt="ChumtPaglu">
+          <div class="name-display">CHUMTPAGLU</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="13">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="13">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-14"></div>
+          <img src="/api/placeholder/400/400" alt="Haden">
+          <div class="name-display">HADEN</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="14">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="14">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-15"></div>
+          <img src="/api/placeholder/400/400" alt="Baygedbai">
+          <div class="name-display">BAYGEDBAI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="15">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="15">Laura <span class="count">0</span></button>
+          </div>
+        </div>
+        <div class="polaroid">
+          <div class="status" id="status-16"></div>
+          <img src="/api/placeholder/400/400" alt="Fauji">
+          <div class="name-display">FAUJI</div>
+          <div class="caption">
+            <button class="like-btn aura-btn" data-id="16">Aura <span class="count">0</span></button>
+            <button class="like-btn laura-btn" data-id="16">Laura <span class="count">0</span></button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <div class="slider-controls">
+    <div class="slider-dot active" data-index="0"></div>
+    <div class="slider-dot" data-index="1"></div>
+  </div>
+
+  <div class="modal-overlay" id="spam-modal">
+    <div class="modal">
+      <button class="modal-close" id="close-modal">✖</button>
+      <h2 class="modal-title typewriter">BATTLE MODE ENGAGED!</h2>
+      <div class="modal-content typewriter">
+        It's a 20-sec AURA BATTLE! Tap like there's no tomorrow! The one with the highest aura ratio will be crowned the
+          ULTIMATE AURA MASTER!
+      </div>
+      <div class="modal-participants" id="modal-participants">
+        Participants: <span id="participant-count">0</span>
+      </div>
+      <div class="modal-timer" id="modal-timer">Waiting to start</div>
+      <div class="modal-buttons">
+        <button class="modal-btn" id="start-spam">START BATTLE</button>
+        <button class="modal-btn" id="give-up">GIVE UP</button>
+      </div>
+    </div>
+  </div>
+  <div class="timer-display" id="spam-timer"></div>
+
   <script>
+    // Local Storage handling
+    const STORAGE_KEY = 'aura-counter-data';
+    let userData = {
+      counterMode: {}, // Persistent data
+      spamMode: {}, // Temporary data
+      activeMode: 'counter',
+      activePage: 0,
+      spamModeActive: false,
+      spamParticipants: 0,
+      spamIntervalId: null, // To store the interval ID
+    };
+
+    // Load data from local storage
+    function loadData() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          userData.counterMode = parsed.counterMode || {};
+          userData.activeMode = parsed.activeMode || 'counter';
+          userData.activePage = parsed.activePage || 0;
+        } catch (e) {
+          console.error("Error parsing stored data", e);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+    }
+
+    // Save data to local storage
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        counterMode: userData.counterMode,
+        activeMode: userData.activeMode,
+        activePage: userData.activePage
+      }));
+    }
+
+    // Function to update the displayed counts
+    function updateCounts(modeData, selector) {
+      document.querySelectorAll(selector).forEach(btn => {
+        const id = btn.dataset.id;
+        const countEl = btn.querySelector('.count');
+        countEl.textContent = modeData[id] ? modeData[id].aura || 0 : 0;
+      });
+    }
+
+    // Function to update the Laura counts
+    function updateLauraCounts(modeData, selector) {
+      document.querySelectorAll(selector).forEach(btn => {
+        const id = btn.dataset.id;
+        const countEl = btn.querySelector('.count');
+        countEl.textContent = modeData[id] ? modeData[id].laura || 0 : 0;
+      });
+    }
+
+    // Update UI from data
+    function updateUI() {
+      const mode = userData.activeMode;
+      const data = userData[mode + 'Mode'];
+
+      updateCounts(data, '.aura-btn');
+      updateLauraCounts(data, '.laura-btn');
+
+      // Update status indicators
+      document.querySelectorAll('.status').forEach(status => {
+        const id = status.id.split('-')[1];
+        const aura = data[id]?.aura || 0;
+        const laura = data[id]?.laura || 0;
+        updateStatus(id, aura, laura);
+      });
+
+      // Set active mode button
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === mode + '-mode');
+      });
+
+      // Set active slider page
+      const slider = document.querySelector('.gallery-slider');
+      slider.style.transform = `translateX(-${userData.activePage * 50}%)`;
+
+      // Update slider dots
+      document.querySelectorAll('.slider-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === userData.activePage);
+      });
+
+      // Show/hide spam mode indicator
+      document.getElementById('spam-indicator').style.display =
+        userData.spamModeActive ? 'block' : 'none';
+
+      //update participant count
+      document.getElementById('participant-count').textContent = userData.spamParticipants;
+    }
+
     function updateStatus(id, aura, laura) {
       const el = document.getElementById('status-' + id);
+      if (!el) return;
+
       let diff = aura - laura;
       let txt;
-      
+
+      if (aura === 0 && laura === 0) {
+        el.style.display = 'none';
+        return;
+      }
+
       if (aura === laura) {
         txt = 'No Aura';
       } else if (diff > 0) {
@@ -299,34 +778,213 @@
       } else {
         txt = (-diff) >= 5 ? 'Aura debt!' : 'Aura debt';
       }
-      
+
       el.textContent = txt;
       el.style.display = 'block';
     }
-    
-    document.querySelectorAll('.aura-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        const c = btn.querySelector('.count');
-        c.textContent = +c.textContent + 1;
-        btn.classList.add('animate');
-        setTimeout(() => btn.classList.remove('animate'), 500);
-        const laura = +document.querySelector(`.laura-btn[data-id="${id}"] .count`).textContent;
-        updateStatus(id, +c.textContent, laura);
+
+    // Initialize the application
+    function init() {
+      loadData();
+
+      // Initialize data structures if empty
+      if (!userData.counterMode) userData.counterMode = {};
+      if (!userData.spamMode) userData.spamMode = {};
+
+      // Set default mode to counter
+      userData.activeMode = 'counter';
+
+      // Set up event listeners for aura/laura buttons
+      document.querySelectorAll('.aura-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          handleAuraClick(btn.dataset.id);
+        });
       });
-    });
-    
-    document.querySelectorAll('.laura-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.id;
-        const c = btn.querySelector('.count');
-        c.textContent = +c.textContent + 1;
-        btn.classList.add('animate');
-        setTimeout(() => btn.classList.remove('animate'), 500);
-        const aura = +document.querySelector(`.aura-btn[data-id="${id}"] .count`).textContent;
-        updateStatus(id, aura, +c.textContent);
+
+      document.querySelectorAll('.laura-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          handleLauraClick(btn.dataset.id);
+        });
       });
-    });
+
+      // Mode buttons
+      document.getElementById('counter-mode').addEventListener('click', () => {
+        userData.activeMode = 'counter';
+        saveData();
+        updateUI();
+      });
+
+      document.getElementById('spam-mode').addEventListener('click', () => {
+        userData.activeMode = 'spam';
+        userData.spamMode = {}; // Reset spam mode data
+        userData.spamParticipants = 0;
+        userData.spamModeActive = false;
+        document.getElementById('spam-modal').classList.add('active');
+        document.getElementById('modal-timer').textContent = 'Waiting to start'; //reset timer text
+        saveData();
+        updateUI();
+      });
+
+      // Slider dots
+      document.querySelectorAll('.slider-dot').forEach(dot => {
+        dot.addEventListener('click', () => {
+          const index = parseInt(dot.dataset.index);
+          userData.activePage = index;
+          saveData();
+          updateUI();
+        });
+      });
+
+      // Spam mode modal
+      document.getElementById('close-modal').addEventListener('click', () => {
+        document.getElementById('spam-modal').classList.remove('active');
+        clearInterval(userData.spamIntervalId); // Clear interval if modal is closed.
+        userData.spamIntervalId = null;
+        userData.spamModeActive = false; //reset
+        userData.spamParticipants = 0;
+        document.getElementById('spam-timer').textContent = '';
+        updateUI();
+      });
+
+      document.getElementById('start-spam').addEventListener('click', () => {
+        if (userData.spamParticipants >= 3) {
+          startSpamMode();
+          document.getElementById('spam-modal').classList.remove('active');
+        }
+      });
+
+      document.getElementById('give-up').addEventListener('click', () => {
+        document.getElementById('spam-modal').classList.remove('active');
+        clearInterval(userData.spamIntervalId); // Clear interval on give up
+        userData.spamIntervalId = null;
+        userData.spamModeActive = false; //reset
+        userData.spamParticipants = 0;
+        document.getElementById('spam-timer').textContent = '';
+        updateUI();
+      });
+
+      // Initialize UI
+      updateUI();
+    }
+
+    function handleAuraClick(id) {
+      const mode = userData.activeMode + 'Mode';
+      if (!userData[mode][id]) userData[mode][id] = {
+        aura: 0,
+        laura: 0
+      };
+      userData[mode][id].aura++;
+
+      if (userData.activeMode === 'spam') {
+        userData.spamParticipants++;
+        checkSpamParticipants();
+      }
+
+      const btn = document.querySelector(`.aura-btn[data-id="${id}"]`);
+      btn.classList.add('animate');
+      setTimeout(() => btn.classList.remove('animate'), 500);
+      saveData();
+      updateUI();
+    }
+
+    function handleLauraClick(id) {
+      const mode = userData.activeMode + 'Mode';
+      if (!userData[mode][id]) userData[mode][id] = {
+        aura: 0,
+        laura: 0
+      };
+      userData[mode][id].laura++;
+
+      if (userData.activeMode === 'spam') {
+        userData.spamParticipants++;
+        checkSpamParticipants();
+      }
+      const btn = document.querySelector(`.laura-btn[data-id="${id}"]`);
+      btn.classList.add('animate');
+      setTimeout(() => btn.classList.remove('animate'), 500);
+      saveData();
+      updateUI();
+    }
+
+    // Handle spam mode
+    function startSpamMode() {
+      if (userData.spamIntervalId) return; //prevent multiple intervals
+
+      userData.spamModeActive = true;
+      userData.spamMode = {}; // Reset spam data
+      updateUI();
+
+      let timeLeft = 20;
+      document.getElementById('spam-indicator').style.display = 'block';
+      document.getElementById('modal-timer').textContent = timeLeft + ' seconds';
+
+      const timerDisplay = document.getElementById('spam-timer');
+      timerDisplay.style.display = 'block';
+      timerDisplay.textContent = formatTime(timeLeft);
+
+
+      userData.spamIntervalId = setInterval(() => {
+        timeLeft--;
+
+        if (timeLeft <= 0) {
+          clearInterval(userData.spamIntervalId);
+          userData.spamIntervalId = null; //clear
+          endSpamMode();
+        } else {
+          timerDisplay.textContent = formatTime(timeLeft);
+          document.getElementById('modal-timer').textContent = timeLeft + ' seconds';
+        }
+      }, 1000);
+    }
+
+    function checkSpamParticipants() {
+      // Check if we have at least 3 different participants
+      if (userData.spamParticipants >= 3 && !userData.spamModeActive) {
+        startSpamMode();
+      }
+      updateUI();
+    }
+
+    function endSpamMode() {
+      userData.spamModeActive = false;
+      userData.spamParticipants = 0;
+      document.getElementById('spam-timer').textContent = '';
+
+      // Find winner
+      let maxRatio = -1;
+      let winner = null;
+      let winningId = null;
+
+      for (const [id, data] of Object.entries(userData.spamMode)) {
+        const ratio = data.aura / (data.laura || 1); // Avoid division by zero
+        if (ratio > maxRatio) {
+          maxRatio = ratio;
+          winningId = id;
+          winner = `Player #${winningId}`;
+        }
+      }
+
+      let message = "BATTLE ENDED! ";
+      if (winner) {
+        message += `${winner} is the ULTIMATE AURA MASTER with a ratio of ${maxRatio.toFixed(2)}!`;
+      } else {
+        message += "No clear winner this time!";
+      }
+      alert(message);
+
+      // Reset spam mode
+      userData.spamMode = {};
+      updateUI();
+    }
+
+    function formatTime(seconds) {
+      // Simple timer formatting function
+      return seconds;
+    }
+
+    // Initialize the app when DOM is ready
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
+
 </html>
